@@ -1,8 +1,8 @@
-import { DndContext, PointerSensor, useSensor, useSensors } from '@dnd-kit/core'
+import { DndContext, DragOverlay, PointerSensor, useSensor, useSensors } from '@dnd-kit/core'
 import { format } from 'date-fns'
 import { useMemo, useState } from 'react'
 import { subjects } from '../data/subjects'
-import DayCell from './DayCell'
+import DayCell, { TaskPillView } from './DayCell'
 
 const weekdayLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
@@ -150,6 +150,8 @@ export default function Calendar({ calendar, tasksApi, onOpenDay, onAddTask, onE
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 6 } }))
   const [todayMode, setTodayMode] = useState(false)
+  const [suppressClick, setSuppressClick] = useState(false)
+  const [activeTask, setActiveTask] = useState(null)
 
   const todayDate = useMemo(() => new Date(), [])
   const todayStr = useMemo(() => format(todayDate, 'yyyy-MM-dd'), [todayDate])
@@ -157,15 +159,30 @@ export default function Calendar({ calendar, tasksApi, onOpenDay, onAddTask, onE
   const todayTasks = tasksApi.tasksByDate.get(todayStr) ?? []
 
   const onDragEnd = (event) => {
+    setSuppressClick(true)
+    window.setTimeout(() => {
+      setSuppressClick(false)
+    }, 0)
+
     const taskId = event.active?.id
     const overDateStr = event.over?.id
+    setActiveTask(null)
     if (!taskId || !overDateStr) return
+    if (typeof overDateStr !== 'string') return
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(overDateStr)) return
 
     const t = tasksApi.tasks.find((x) => x.id === taskId)
     if (!t) return
-    if (t.isExam || t.isHoliday || t.isPersonal) return
+    const lowerType = String(t.type || '').toLowerCase()
+    const isEventType = lowerType === 'holiday' || lowerType === 'compsoc' || lowerType === 'personal'
+    if (t.isExam || t.isHoliday || t.isPersonal || t.subject === 'personal' || isEventType) return
     if (t.date === overDateStr) return
-    tasksApi.moveTask(taskId, overDateStr)
+    try {
+      tasksApi.moveTask(taskId, overDateStr)
+    } catch (err) {
+      // Never let DnD errors blank the whole UI.
+      console.error('Failed to move task via drag-and-drop', err)
+    }
   }
 
   return (
@@ -269,7 +286,21 @@ export default function Calendar({ calendar, tasksApi, onOpenDay, onAddTask, onE
             ))}
           </div>
 
-          <DndContext sensors={sensors} onDragEnd={onDragEnd}>
+          <DndContext
+            sensors={sensors}
+            onDragStart={(event) => {
+              setSuppressClick(true)
+              const id = event.active?.id
+              if (!id) return
+              const t = tasksApi.tasks.find((x) => x.id === id) ?? null
+              setActiveTask(t)
+            }}
+            onDragCancel={() => {
+              setSuppressClick(false)
+              setActiveTask(null)
+            }}
+            onDragEnd={onDragEnd}
+          >
             <div className="grid grid-cols-7 auto-rows-fr">
               {calendar.gridDays.map((d) => {
                 const dateStr = format(d, 'yyyy-MM-dd')
@@ -297,10 +328,19 @@ export default function Calendar({ calendar, tasksApi, onOpenDay, onAddTask, onE
                     hasExam={hasExam}
                     onClick={() => onOpenDay(d)}
                     onAdd={() => onAddTask(dateStr)}
+                    suppressClick={suppressClick}
                   />
                 )
               })}
             </div>
+
+            <DragOverlay dropAnimation={null} style={{ zIndex: 60 }}>
+              {activeTask ? (
+                <div className="pointer-events-none">
+                  <TaskPillView task={activeTask} dragging overlay />
+                </div>
+              ) : null}
+            </DragOverlay>
           </DndContext>
         </div>
 

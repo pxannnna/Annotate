@@ -3,23 +3,16 @@ import { CSS } from '@dnd-kit/utilities'
 import { format } from 'date-fns'
 import { classesForSubject } from '../data/subjects'
 
-function TaskPill({ task }) {
-  const draggable = !(task.isExam || task.isHoliday || task.isPersonal)
-  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
-    id: task.id,
-    disabled: !draggable,
-  })
-
-  const style = transform ? { transform: CSS.Translate.toString(transform) } : undefined
-  const cls = classesForSubject(task.subject)
-  const isEvent = task.isHoliday || task.isPersonal
+export function TaskPillView({ task, dragging = false, overlay = false }) {
+  const lowerType = String(task.type || '').toLowerCase()
+  const isEventType = lowerType === 'holiday' || lowerType === 'compsoc' || lowerType === 'personal'
+  const isEvent = task.isHoliday || task.isPersonal || task.subject === 'personal' || isEventType
   const isExam = task.isExam
+  const cls = classesForSubject(task.subject)
 
   return (
     <div
-      ref={setNodeRef}
-      style={style}
-      className={`group flex min-w-0 items-center gap-1.5 rounded-full px-2 py-1 text-[11px] font-semibold shadow-sm ring-1 ring-black/5 transition ${
+      className={`flex min-w-0 items-center gap-1.5 rounded-full px-2 py-1 text-[11px] font-semibold ring-1 ring-black/5 transition ${
         task.done
           ? 'bg-slate-200 text-slate-600 line-through opacity-80'
           : isExam
@@ -27,11 +20,7 @@ function TaskPill({ task }) {
             : isEvent
               ? 'pill-event shadow-none ring-0'
               : `${cls.chip} ring-slate-200`
-      } ${draggable ? 'cursor-grab active:cursor-grabbing' : 'cursor-default'} ${
-        isDragging ? 'opacity-70' : ''
-      }`}
-      {...attributes}
-      {...listeners}
+      } ${overlay ? 'shadow-lg' : 'shadow-sm'} ${dragging ? 'cursor-grabbing' : ''}`}
       title={task.name}
     >
       {!isExam && !isEvent && (
@@ -50,6 +39,32 @@ function TaskPill({ task }) {
   )
 }
 
+function TaskPill({ task }) {
+  const lowerType = String(task.type || '').toLowerCase()
+  const isEventType = lowerType === 'holiday' || lowerType === 'compsoc' || lowerType === 'personal'
+  const draggable = !(task.isExam || task.isHoliday || task.isPersonal || task.subject === 'personal' || isEventType)
+  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
+    id: task.id,
+    disabled: !draggable,
+  })
+
+  const style = transform ? { transform: CSS.Translate.toString(transform) } : undefined
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={`${
+        draggable ? 'cursor-grab active:cursor-grabbing' : 'cursor-default'
+      } ${isDragging ? 'opacity-20' : ''}`}
+      {...attributes}
+      {...listeners}
+    >
+      <TaskPillView task={task} dragging={isDragging} />
+    </div>
+  )
+}
+
 export default function DayCell({
   date,
   dateStr,
@@ -63,6 +78,7 @@ export default function DayCell({
   hasExam,
   onClick,
   onAdd,
+  suppressClick = false,
 }) {
   const { setNodeRef, isOver } = useDroppable({ id: dateStr })
   const isHolidayEvent = (t) => t.isHoliday || String(t.type || '').toLowerCase() === 'holiday'
@@ -84,10 +100,26 @@ export default function DayCell({
     : undefined
 
   return (
-    <button
+    <div
       ref={setNodeRef}
-      type="button"
-      onClick={onClick}
+      role="button"
+      tabIndex={0}
+      onClick={(e) => {
+        if (suppressClick) {
+          e.preventDefault()
+          e.stopPropagation()
+          return
+        }
+        onClick?.(e)
+      }}
+      onKeyDown={(e) => {
+        if (suppressClick) return
+        if (!onClick) return
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          onClick()
+        }
+      }}
       style={highlightStyle}
       className={`group relative flex h-[156px] w-full flex-col items-start justify-start overflow-hidden border-b border-r border-t-0 border-l-0 border-slate-200 p-2 pb-6 text-left transition-[background-color,box-shadow] hover:bg-slate-50 focus:outline-none ${
         !inMonth ? 'bg-slate-50/50 text-slate-400' : 'bg-white'
@@ -196,7 +228,7 @@ export default function DayCell({
           {hours}h
         </div>
       ) : null}
-    </button>
+    </div>
   )
 }
 

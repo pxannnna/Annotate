@@ -1,11 +1,80 @@
 import { differenceInCalendarDays, format, parseISO } from 'date-fns'
-import { subjects } from '../data/subjects'
+import { classesForSubject, subjects } from '../data/subjects'
 
 const subjectProgressStyles = {
   algorithms: { light: '#EDE9FE', dark: '#7C3AED' },
   physics: { light: '#FEF3C7', dark: '#D97706' },
   fds: { light: '#D1FAE5', dark: '#059669' },
   maths: { light: '#DBEAFE', dark: '#2563EB' },
+}
+
+function fmtPct(n, { approx = false } = {}) {
+  if (!Number.isFinite(n)) return '—'
+  const rounded = Math.round(n * 10) / 10
+  const text = Number.isInteger(rounded) ? String(rounded) : String(rounded)
+  return `${approx ? '~' : ''}${text}%`
+}
+
+function targetForSubject(subjectId) {
+  // All targets are minimum exam % needed to reach 40% overall (pass threshold).
+  const PASS_OVERALL = 40
+
+  if (subjectId === 'physics') {
+    return {
+      mustPass: true,
+      examWeightPct: 80,
+      minExamPct: 40,
+      approx: false,
+      assumption: 'Assuming 0 on remaining coursework components',
+    }
+  }
+
+  if (subjectId === 'maths') {
+    return {
+      mustPass: true,
+      examWeightPct: 80,
+      minExamPct: 40,
+      approx: false,
+      assumption: 'Assuming 0 on all coursework workshops',
+    }
+  }
+
+  if (subjectId === 'fds') {
+    const examWeight = 0.5
+    const assumedCwPct = 70
+    const cwOverallPct = assumedCwPct * 0.5
+    const neededFromExamOverall = Math.max(0, PASS_OVERALL - cwOverallPct)
+    const minExamPct = neededFromExamOverall / (examWeight * 100) * 100
+
+    return {
+      mustPass: false,
+      examWeightPct: 50,
+      minExamPct,
+      approx: false,
+      assumption: 'Assumed: coursework = 70%',
+    }
+  }
+
+  if (subjectId === 'algorithms') {
+    const examWeight = 0.6
+    const cwWeight = 0.4
+    const cw1 = 97
+    const cw2Assumed = 80
+    const cwAvg = (cw1 + cw2Assumed) / 2
+    const cwOverallPct = cwAvg * cwWeight
+    const neededFromExamOverall = Math.max(0, PASS_OVERALL - cwOverallPct)
+    const minExamPct = neededFromExamOverall / (examWeight * 100) * 100
+
+    return {
+      mustPass: false,
+      examWeightPct: 60,
+      minExamPct,
+      approx: true,
+      assumption: 'Assumed: CW2 = 80/100',
+    }
+  }
+
+  return null
 }
 
 function ProgressBar({ value, trackColor, fillColor }) {
@@ -55,6 +124,11 @@ export default function SubjectSidebar({ tasksApi, onSelectDate }) {
                       <div className="min-w-0 truncate text-sm font-semibold leading-snug text-slate-900">
                         {s.full}
                       </div>
+                      {targetForSubject(s.id)?.mustPass ? (
+                        <span className="shrink-0 rounded-full bg-rose-50 px-2 py-0.5 text-[11px] font-bold text-rose-700 ring-1 ring-rose-200">
+                          ⚠ Force fail
+                        </span>
+                      ) : null}
                       <span
                         className="shrink-0 rounded-full text-[12px] font-semibold"
                         style={{
@@ -89,6 +163,36 @@ export default function SubjectSidebar({ tasksApi, onSelectDate }) {
                     />
                   </div>
                 </div>
+
+                {(() => {
+                  const t = targetForSubject(s.id)
+                  if (!t) return null
+                  return (
+                    <div className="mt-3">
+                      <div className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500">
+                        Exam target
+                      </div>
+
+                      <div className="mt-1 rounded-xl border border-slate-200 bg-white px-3 py-2">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="rounded-full border border-slate-200 bg-slate-50 px-2 py-0.5 text-[11px] font-semibold text-slate-700">
+                            Exam: {t.examWeightPct}% of course
+                          </span>
+                          <span className="text-[11px] font-semibold text-slate-700">
+                            Min. exam score needed:{' '}
+                            <span className="font-extrabold" style={{ color: st.dark }}>
+                              {fmtPct(t.minExamPct, { approx: t.approx })}
+                            </span>
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="mt-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-[11px] italic text-slate-500">
+                        {t.assumption}
+                      </div>
+                    </div>
+                  )
+                })()}
 
                 <div className="mt-3 flex items-center justify-between text-xs text-slate-600">
                   <div>
