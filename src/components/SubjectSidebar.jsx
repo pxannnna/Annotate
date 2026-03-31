@@ -25,7 +25,7 @@ function targetForSubject(subjectId) {
       examWeightPct: 80,
       minExamPct: 40,
       approx: false,
-      assumption: 'Assuming 0 on remaining coursework components',
+      assumption: null,
     }
   }
 
@@ -35,7 +35,7 @@ function targetForSubject(subjectId) {
       examWeightPct: 80,
       minExamPct: 40,
       approx: false,
-      assumption: 'Assuming 0 on all coursework workshops',
+      assumption: null,
     }
   }
 
@@ -187,9 +187,11 @@ export default function SubjectSidebar({ tasksApi, onSelectDate }) {
                         </div>
                       </div>
 
-                      <div className="mt-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-[11px] italic text-slate-500">
-                        {t.assumption}
-                      </div>
+                      {t.assumption ? (
+                        <div className="mt-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-[11px] italic text-slate-500">
+                          {t.assumption}
+                        </div>
+                      ) : null}
                     </div>
                   )
                 })()}

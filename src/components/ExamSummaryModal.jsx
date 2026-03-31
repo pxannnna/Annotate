@@ -80,22 +80,22 @@ export default function ExamSummaryModal({ open, onClose }) {
         aria-label="Close summary"
       />
 
-      <div className="relative w-full max-w-[820px] overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-soft">
-        <div className="flex items-center justify-between border-b border-slate-200 px-5 py-4">
+      <div className="relative w-full max-w-[820px] rounded-2xl border border-slate-200 bg-white shadow-soft">
+        <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3">
           <div className="min-w-0">
-            <div className="truncate text-lg font-semibold text-slate-900">Exam summary</div>
+            <div className="truncate text-[15px] font-semibold text-slate-900">Exam summary</div>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 transition hover:bg-slate-50 hover:ring-1 hover:ring-slate-200"
+            className="inline-flex h-8 w-8 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-700 transition hover:bg-slate-50 hover:ring-1 hover:ring-slate-200"
             aria-label="Close"
           >
             ✕
           </button>
         </div>
 
-        <div className="p-5" style={{ maxHeight: '90vh' }}>
+        <div className="px-4 pb-4 pt-3">
           {rows.map((r, idx) => {
             const c = subjectColors[r.subject.id] ?? { light: '#f1f5f9', dark: '#0f172a' }
             const max = globalMax || 1
@@ -103,39 +103,39 @@ export default function ExamSummaryModal({ open, onClose }) {
             return (
               <div
                 key={r.subject.id}
-                className={`${idx === rows.length - 1 ? '' : 'mb-4'}`}
+                className={`${idx === rows.length - 1 ? '' : 'mb-3'}`}
               >
                 <div className="flex items-center gap-3">
                   <span
-                    className="inline-flex items-center rounded-full text-[13px] font-semibold"
+                    className="inline-flex items-center rounded-full text-[12px] font-semibold"
                     style={{
                       backgroundColor: c.light,
                       color: c.dark,
-                      padding: '3px 10px',
+                      padding: '2px 9px',
                       borderRadius: 999,
                     }}
                   >
                     {r.subject.short ?? r.subject.id}
                   </span>
-                  <div className="text-[13px] text-slate-500">
+                  <div className="text-[12px] text-slate-500">
                     Exam {format(parseISO(r.subject.examDate), 'MMM d, yyyy')}
                   </div>
-                  <div className="ml-auto text-[13px] font-medium text-slate-500">
+                  <div className="ml-auto text-[12px] font-medium text-slate-500">
                     {r.totalHours}h total
                   </div>
                 </div>
 
-                <div className="mt-3 space-y-0">
+                <div className="mt-2 space-y-0">
                   {r.typeRows.map((tr) => {
                     const widthPct = Math.max(0, Math.min(100, (tr.hours / max) * 100))
                     return (
-                      <div key={tr.type} className="flex items-center gap-4 py-1">
-                        <div className="min-w-[180px] text-[13px] text-[#374151]">
+                      <div key={tr.type} className="flex items-center gap-3 py-0.5">
+                        <div className="min-w-[150px] text-[12px] text-[#374151]">
                           {tr.type}
                         </div>
                         <div className="flex-1">
                           <div
-                            className="h-[6px] rounded-full"
+                            className="h-[5px] rounded-full"
                             style={{
                               width: `${widthPct}%`,
                               backgroundColor: c.dark,
@@ -143,14 +143,14 @@ export default function ExamSummaryModal({ open, onClose }) {
                             }}
                           />
                         </div>
-                        <div className="w-[56px] text-right text-[13px] text-[#6b7280]">
+                        <div className="w-[48px] text-right text-[12px] text-[#6b7280]">
                           {tr.hours}h
                         </div>
                       </div>
                     )
                   })}
                 </div>
-                {idx !== rows.length - 1 ? <div className="mt-4 border-b border-slate-200" /> : null}
+                {idx !== rows.length - 1 ? <div className="mt-3 border-b border-slate-200" /> : null}
               </div>
             )
           })}

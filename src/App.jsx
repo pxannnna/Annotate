@@ -90,7 +90,7 @@ export default function App() {
         <div className="mx-auto flex max-w-[1280px] items-center gap-4 px-4 py-3">
           <div className="min-w-0">
             <div className="font-display text-xl leading-none tracking-tight text-slate-900 sm:text-2xl">
-              My revision panner
+              My Planner
             </div>
             <div className="mt-1 text-xs text-slate-500">Today: {headerTodayLabel}</div>
           </div>

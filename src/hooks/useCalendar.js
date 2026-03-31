@@ -2,17 +2,16 @@ import { useCallback, useMemo, useState } from 'react'
 import {
   addDays,
   addMonths,
-  endOfMonth,
-  endOfWeek,
   format,
   isSameMonth,
-  startOfMonth,
   startOfWeek,
   subMonths,
 } from 'date-fns'
 
 export function useCalendar() {
-  const [viewDate, setViewDate] = useState(() => startOfMonth(new Date()))
+  // Month view is a rolling 6-week window starting from the week containing viewDate.
+  // We initialize viewDate to today so "today" is always in the top row initially.
+  const [viewDate, setViewDate] = useState(() => new Date())
   const [selectedDate, setSelectedDate] = useState(() => new Date())
   const [weekView, setWeekView] = useState(false)
 
@@ -28,7 +27,7 @@ export function useCalendar() {
 
   const goToday = useCallback(() => {
     const now = new Date()
-    setViewDate(startOfMonth(now))
+    setViewDate(now)
     setSelectedDate(now)
   }, [])
 
@@ -38,15 +37,9 @@ export function useCalendar() {
       return Array.from({ length: 7 }, (_, i) => addDays(start, i))
     }
 
-    const start = startOfWeek(startOfMonth(viewDate), { weekStartsOn: 1 })
-    const end = endOfWeek(endOfMonth(viewDate), { weekStartsOn: 1 })
-    const days = []
-    let d = start
-    while (d <= end) {
-      days.push(d)
-      d = addDays(d, 1)
-    }
-    return days
+    const start = startOfWeek(viewDate, { weekStartsOn: 1 })
+    // Always show a full 6-week grid so the layout is stable.
+    return Array.from({ length: 42 }, (_, i) => addDays(start, i))
   }, [viewDate, weekView, selectedDate])
 
   const isInViewMonth = useCallback(
