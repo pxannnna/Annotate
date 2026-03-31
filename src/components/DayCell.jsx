@@ -62,6 +62,7 @@ export default function DayCell({
   hasBall,
   hasExam,
   onClick,
+  onAdd,
 }) {
   const { setNodeRef, isOver } = useDroppable({ id: dateStr })
   const isHolidayEvent = (t) => t.isHoliday || String(t.type || '').toLowerCase() === 'holiday'
@@ -88,12 +89,26 @@ export default function DayCell({
       type="button"
       onClick={onClick}
       style={highlightStyle}
-      className={`relative flex h-[156px] w-full flex-col items-start justify-start overflow-hidden border-b border-r border-t-0 border-l-0 border-slate-200 p-2 pb-6 text-left transition-[background-color,box-shadow] hover:bg-slate-50 focus:outline-none ${
+      className={`group relative flex h-[156px] w-full flex-col items-start justify-start overflow-hidden border-b border-r border-t-0 border-l-0 border-slate-200 p-2 pb-6 text-left transition-[background-color,box-shadow] hover:bg-slate-50 focus:outline-none ${
         !inMonth ? 'bg-slate-50/50 text-slate-400' : 'bg-white'
       } ${isToday ? 'hover:bg-violet-50' : ''} ${
         examTask ? 'bg-rose-50' : hasHoliday ? 'bg-sky-50/60' : ''
       }`}
     >
+      <button
+        type="button"
+        onClick={(e) => {
+          e.preventDefault()
+          e.stopPropagation()
+          onAdd?.()
+        }}
+        className="absolute right-2 top-2 inline-flex h-4 w-4 items-center justify-center rounded-full bg-[#f3f4f6] text-[12px] font-bold leading-none text-[#6b7280] opacity-0 transition-opacity group-hover:opacity-100"
+        aria-label={`Add task on ${dateStr}`}
+        title="Add task"
+      >
+        +
+      </button>
+
       <div
         className="absolute left-0 top-0 h-full"
         style={examTask ? { width: 3, backgroundColor: '#f43f5e' } : undefined}

@@ -1,11 +1,21 @@
 import { differenceInCalendarDays, format, parseISO } from 'date-fns'
-import { subjects, classesForSubject } from '../data/subjects'
+import { subjects } from '../data/subjects'
 
-function ProgressBar({ value }) {
+const subjectProgressStyles = {
+  algorithms: { light: '#EDE9FE', dark: '#7C3AED' },
+  physics: { light: '#FEF3C7', dark: '#D97706' },
+  fds: { light: '#D1FAE5', dark: '#059669' },
+  maths: { light: '#DBEAFE', dark: '#2563EB' },
+}
+
+function ProgressBar({ value, trackColor, fillColor }) {
   return (
-    <div className="h-2 w-full overflow-hidden rounded-full bg-slate-100">
+    <div
+      className="h-2 w-full overflow-hidden rounded-full"
+      style={{ backgroundColor: trackColor, borderRadius: 999 }}
+    >
       <div
-        className="h-full rounded-full bg-slate-900 transition-[width] duration-500"
+        className="h-full rounded-full"
         style={{ width: `${Math.max(0, Math.min(100, value))}%` }}
       />
     </div>
@@ -14,53 +24,79 @@ function ProgressBar({ value }) {
 
 export default function SubjectSidebar({ tasksApi, onSelectDate }) {
   const now = new Date()
+  const sortedSubjects = [...subjects].sort((a, b) =>
+    String(a.examDate).localeCompare(String(b.examDate)),
+  )
 
   return (
     <div className="space-y-4">
       <div className="glass rounded-2xl border border-slate-200/70 p-4 shadow-sm">
         <div className="flex items-center justify-between">
           <div className="text-sm font-semibold text-slate-900">Subjects</div>
-          <div className="text-xs text-slate-500">progress</div>
+          <div className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#9ca3af]">
+            progress
+          </div>
         </div>
 
         <div className="mt-3 space-y-3">
-          {subjects.map((s) => {
+          {sortedSubjects.map((s) => {
             const prog = tasksApi.getSubjectProgress(s.id)
-            const cls = classesForSubject(s.id)
             const days = differenceInCalendarDays(parseISO(s.examDate), now)
+            const st = subjectProgressStyles[s.id] ?? { light: '#f1f5f9', dark: '#0f172a' }
             return (
               <div
                 key={s.id}
-                className="rounded-xl border border-slate-200 bg-white p-3 shadow-sm transition hover:shadow-md hover:ring-1 hover:ring-slate-200"
+                className="rounded-xl border border-slate-200 bg-white p-4 text-left shadow-sm transition hover:shadow-md hover:ring-1 hover:ring-slate-200"
+                style={{ borderLeftWidth: 4, borderLeftColor: st.dark }}
               >
-                <div className="flex items-start justify-between gap-3">
-                  <div className="min-w-0">
+                <div className="flex w-full items-start justify-between gap-3">
+                  <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
-                      <span className={`h-2.5 w-2.5 rounded-full ${cls.chip}`} />
-                      <div className="text-sm font-semibold leading-snug text-slate-900">
+                      <div className="min-w-0 truncate text-sm font-semibold leading-snug text-slate-900">
                         {s.full}
                       </div>
+                      <span
+                        className="shrink-0 rounded-full text-[12px] font-semibold"
+                        style={{
+                          backgroundColor: st.light,
+                          color: st.dark,
+                          padding: '2px 10px',
+                          borderRadius: 999,
+                        }}
+                      >
+                        {prog.pct}%
+                      </span>
                     </div>
                     <div className="mt-1 text-xs text-slate-500">
                       Exam {format(parseISO(s.examDate), 'MMM d')} · {days} days left
                     </div>
                   </div>
-                  <div className="text-right text-xs text-slate-600">
-                    <div className="font-semibold text-slate-900">{prog.pct}%</div>
-                    <div>
-                      {prog.doneTasks}/{prog.totalTasks}
-                    </div>
-                  </div>
                 </div>
 
                 <div className="mt-3">
-                  <ProgressBar value={prog.pct} />
+                  <div
+                    className="h-2 w-full overflow-hidden rounded-full"
+                    style={{ backgroundColor: st.light, borderRadius: 999 }}
+                  >
+                    <div
+                      className="h-full rounded-full"
+                      style={{
+                        width: `${Math.max(0, Math.min(100, prog.pct))}%`,
+                        backgroundColor: st.dark,
+                        borderRadius: 999,
+                        transition: 'width 0.4s ease',
+                      }}
+                    />
+                  </div>
                 </div>
 
-                <div className="mt-2 flex items-center justify-between text-xs text-slate-600">
+                <div className="mt-3 flex items-center justify-between text-xs text-slate-600">
                   <div>
                     <span className="font-semibold text-slate-900">{prog.doneHours}</span>h
                     {' done'}
+                  </div>
+                  <div className="text-[12px] text-[#9ca3af]">
+                    {prog.doneTasks}/{prog.totalTasks}
                   </div>
                   <div>
                     <span className="font-semibold text-slate-900">{prog.plannedHours}</span>h

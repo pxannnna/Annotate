@@ -129,6 +129,7 @@ export default function App() {
             tasksApi={tasksApi}
             onOpenDay={openDay}
             onAddTask={(dateStr) => openAdd(dateStr)}
+            onEditTask={openEdit}
           />
         </section>
       </main>
