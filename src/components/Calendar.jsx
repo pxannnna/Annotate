@@ -79,12 +79,12 @@ export default function Calendar({ calendar, tasksApi, onOpenDay, onAddTask }) {
                 key={s.id}
                 type="button"
                 onClick={() => tasksApi.toggleFilter(s.id)}
-                className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold ring-1 ring-black/5 transition ${
-                  active ? cls.chip : 'bg-slate-100 text-slate-600'
+                className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold ring-1 transition hover:ring-slate-300 ${
+                  active ? `${cls.chip} ring-slate-200` : 'bg-slate-100 text-slate-600 ring-slate-200'
                 }`}
                 title={active ? 'Hide' : 'Show'}
               >
-                <span className={`h-2 w-2 rounded-full ${active ? 'bg-white/80' : 'bg-slate-400'}`} />
+                <span className={`h-2 w-2 rounded-full ${active ? 'bg-slate-700/60' : 'bg-slate-400'}`} />
                 {s.chip}
               </button>
             )
@@ -107,7 +107,6 @@ export default function Calendar({ calendar, tasksApi, onOpenDay, onAddTask }) {
             const allTasks = tasksApi.tasksByDate.get(dateStr) ?? []
             const visibleTasks = tasksApi.getVisibleTasksForDateString(dateStr)
             const isToday = dateStr === format(new Date(), 'yyyy-MM-dd')
-            const isSelected = dateStr === format(calendar.selectedDate, 'yyyy-MM-dd')
             const isAllDone = tasksApi.isDayAllDone(dateStr)
             const hours = tasksApi.getHoursTotal(dateStr, { onlyVisible: true, onlyUndone: false })
             const hasHoliday = allTasks.some((t) => t.isHoliday)
@@ -121,7 +120,6 @@ export default function Calendar({ calendar, tasksApi, onOpenDay, onAddTask }) {
                 dateStr={dateStr}
                 inMonth={calendar.isInViewMonth(d)}
                 isToday={isToday}
-                isSelected={isSelected}
                 isAllDone={isAllDone}
                 hours={hours}
                 visibleTasks={visibleTasks}

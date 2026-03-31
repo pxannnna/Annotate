@@ -35,27 +35,27 @@ export function subjectById(id) {
 
 export const subjectColorClasses = {
   algorithms: {
-    chip: 'bg-alg text-white',
+    chip: 'chip-alg',
     border: 'border-alg',
     tint: 'bg-blue-50',
   },
   physics: {
-    chip: 'bg-phys text-white',
+    chip: 'chip-phys',
     border: 'border-phys',
     tint: 'bg-emerald-50',
   },
   fds: {
-    chip: 'bg-fds text-white',
+    chip: 'chip-fds',
     border: 'border-fds',
     tint: 'bg-fuchsia-50',
   },
   maths: {
-    chip: 'bg-maths text-white',
+    chip: 'chip-maths',
     border: 'border-maths',
     tint: 'bg-orange-50',
   },
   personal: {
-    chip: 'bg-personal text-white',
+    chip: 'chip-personal',
     border: 'border-personal',
     tint: 'bg-pink-50',
   },

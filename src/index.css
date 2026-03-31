@@ -8,14 +8,14 @@
     --muted: 100 116 139;
     --ring: 148 163 184;
 
-    /* subject palette (used for subtle tints, beyond Tailwind tokens) */
-    --alg: 37 99 235;
-    --phys: 22 163 74;
-    --fds: 162 28 175;
-    --maths: 234 88 12;
-    --exam: 220 38 38;
-    --personal: 236 72 153;
-    --holiday: 14 165 233;
+    /* softer, more minimal subject palette */
+    --alg: 96 165 250; /* blue-400 */
+    --phys: 74 222 128; /* green-400 */
+    --fds: 216 180 254; /* purple-300 */
+    --maths: 251 146 60; /* orange-400 */
+    --exam: 239 68 68; /* red-500 */
+    --personal: 251 113 133; /* rose-400 */
+    --holiday: 56 189 248; /* sky-400 */
   }
 
   body {
@@ -71,6 +71,35 @@
   }
   .bg-holiday {
     background-color: rgb(var(--holiday));
+  }
+
+  /* Subtle chip variants (muted, minimal) */
+  .chip-alg {
+    background-color: rgba(var(--alg), 0.22);
+    color: rgb(30 41 59);
+  }
+  .chip-phys {
+    background-color: rgba(var(--phys), 0.22);
+    color: rgb(30 41 59);
+  }
+  .chip-fds {
+    background-color: rgba(var(--fds), 0.26);
+    color: rgb(30 41 59);
+  }
+  .chip-maths {
+    background-color: rgba(var(--maths), 0.22);
+    color: rgb(30 41 59);
+  }
+  .chip-personal {
+    background-color: rgba(var(--personal), 0.20);
+    color: rgb(30 41 59);
+  }
+
+  /* Event / non-study pill styling */
+  .pill-event {
+    background-color: rgb(241 245 249); /* slate-100 */
+    color: rgb(71 85 105); /* slate-600 */
+    border: 1px dashed rgb(203 213 225); /* slate-300 */
   }
 
   .border-alg {

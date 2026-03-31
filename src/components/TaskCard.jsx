@@ -10,7 +10,7 @@ export default function TaskCard({ task, onToggleDone, onEdit, onDelete }) {
   return (
     <div
       className={`group relative rounded-xl border border-slate-200 bg-white p-3 shadow-sm transition ${
-        muted ? 'opacity-60' : 'hover:shadow-md'
+        muted ? 'opacity-60' : 'hover:shadow-md hover:ring-1 hover:ring-slate-200'
       }`}
       style={{ borderLeftWidth: 6 }}
     >

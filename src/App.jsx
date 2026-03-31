@@ -9,6 +9,7 @@ import SubjectSidebar from './components/SubjectSidebar'
 import Calendar from './components/Calendar'
 import DayDetailPanel from './components/DayDetailPanel'
 import AddEditModal from './components/AddEditModal'
+import ExamSummaryModal from './components/ExamSummaryModal'
 
 export default function App() {
   const calendar = useCalendar()
@@ -17,6 +18,7 @@ export default function App() {
   const [isPanelOpen, setIsPanelOpen] = useState(false)
   const [modalState, setModalState] = useState({ open: false, mode: 'add', task: null })
   const [didAutoJump, setDidAutoJump] = useState(false)
+  const [isSummaryOpen, setIsSummaryOpen] = useState(false)
 
   const selectedDateStr = useMemo(
     () => format(calendar.selectedDate, 'yyyy-MM-dd'),
@@ -88,7 +90,7 @@ export default function App() {
         <div className="mx-auto flex max-w-[1280px] items-center gap-4 px-4 py-3">
           <div className="min-w-0">
             <div className="font-display text-xl leading-none tracking-tight text-slate-900 sm:text-2xl">
-              anna&apos;s revision planner
+              My revision panner
             </div>
             <div className="mt-1 text-xs text-slate-500">Today: {headerTodayLabel}</div>
           </div>
@@ -96,6 +98,14 @@ export default function App() {
           <div className="ml-2 hidden min-w-0 flex-1 items-center gap-2 overflow-x-auto md:flex">
             <CountdownChips />
           </div>
+
+          <button
+            type="button"
+            onClick={() => setIsSummaryOpen(true)}
+            className="hidden items-center rounded-full border border-slate-200 bg-white px-3.5 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 hover:ring-1 hover:ring-slate-200 md:inline-flex"
+          >
+            Summary
+          </button>
 
           <button
             type="button"
@@ -142,6 +152,8 @@ export default function App() {
           onSave={onSaveTask}
         />
       )}
+
+      <ExamSummaryModal open={isSummaryOpen} onClose={() => setIsSummaryOpen(false)} />
     </div>
   )
 }

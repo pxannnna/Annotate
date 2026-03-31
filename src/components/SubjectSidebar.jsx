@@ -31,7 +31,7 @@ export default function SubjectSidebar({ tasksApi, onSelectDate }) {
             return (
               <div
                 key={s.id}
-                className="rounded-xl border border-slate-200 bg-white p-3 shadow-sm"
+                className="rounded-xl border border-slate-200 bg-white p-3 shadow-sm transition hover:shadow-md hover:ring-1 hover:ring-slate-200"
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
@@ -92,7 +92,7 @@ export default function SubjectSidebar({ tasksApi, onSelectDate }) {
                   key={t.id}
                   type="button"
                   onClick={() => onSelectDate(parseISO(t.date))}
-                  className="flex w-full items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-left text-xs transition hover:bg-slate-50"
+                  className="flex w-full items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-left text-xs transition hover:bg-slate-50 hover:ring-1 hover:ring-slate-200"
                 >
                   <span className={`h-2.5 w-2.5 rounded-full ${cls.chip}`} />
                   <span className={`min-w-0 flex-1 truncate ${t.done ? 'line-through opacity-60' : ''}`}>
