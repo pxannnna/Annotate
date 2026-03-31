@@ -1,0 +1,91 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,500,25;9..144,700,25&display=swap');
+@import 'tailwindcss';
+
+@layer base {
+  :root {
+    --surface: 255 255 255;
+    --ink: 15 23 42;
+    --muted: 100 116 139;
+    --ring: 148 163 184;
+
+    /* subject palette (used for subtle tints, beyond Tailwind tokens) */
+    --alg: 37 99 235;
+    --phys: 22 163 74;
+    --fds: 162 28 175;
+    --maths: 234 88 12;
+    --exam: 220 38 38;
+    --personal: 236 72 153;
+    --holiday: 14 165 233;
+  }
+
+  body {
+    background: rgb(248 250 252); /* slate-50 */
+    color: rgb(15 23 42); /* slate-900 */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-family:
+      ui-sans-serif,
+      system-ui,
+      -apple-system,
+      'Segoe UI',
+      Roboto,
+      Helvetica,
+      Arial,
+      'Apple Color Emoji',
+      'Segoe UI Emoji';
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: Fraunces, ui-serif, Georgia, serif;
+  }
+
+  .shadow-soft {
+    box-shadow: 0 18px 60px rgba(15, 23, 42, 0.12);
+  }
+
+  .glass {
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(10px);
+  }
+
+  /* Subject color utilities (so we don't depend on config generation) */
+  .bg-alg {
+    background-color: rgb(var(--alg));
+  }
+  .bg-phys {
+    background-color: rgb(var(--phys));
+  }
+  .bg-fds {
+    background-color: rgb(var(--fds));
+  }
+  .bg-maths {
+    background-color: rgb(var(--maths));
+  }
+  .bg-exam {
+    background-color: rgb(var(--exam));
+  }
+  .bg-personal {
+    background-color: rgb(var(--personal));
+  }
+  .bg-holiday {
+    background-color: rgb(var(--holiday));
+  }
+
+  .border-alg {
+    border-color: rgb(var(--alg));
+  }
+  .border-phys {
+    border-color: rgb(var(--phys));
+  }
+  .border-fds {
+    border-color: rgb(var(--fds));
+  }
+  .border-maths {
+    border-color: rgb(var(--maths));
+  }
+  .border-personal {
+    border-color: rgb(var(--personal));
+  }
+}
