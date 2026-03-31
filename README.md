@@ -1,16 +1,61 @@
-# React + Vite
+# anna's revision planner
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A clean, local-first revision planner that lets you see your schedule at a glance, track progress per subject, and reschedule tasks by dragging them between days.
 
-Currently, two official plugins are available:
+- **Live site**: `https://annotate-smoky.vercel.app`
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## What it does
 
-## React Compiler
+- **Pre-loads a full revision plan** (lectures/tutorials/past papers) on first run via `localStorage` using a `hasInitialised` flag
+- **Calendar month/week view** with navigation + “Today” jump
+- **Day detail panel** to see all tasks for a day and tick them off
+- **Progress sidebar** per subject (tasks done %, hours done vs planned) + today’s tasks
+- **Drag & drop rescheduling**: drag a task pill onto another day to change its date
+- **Subject filters**: hide/show subjects on the calendar without deleting tasks
+- **Special days**: exam banner, Portugal holiday days (✈), and Ball evening (🎉)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Tech stack
 
-## Expanding the ESLint configuration
+- **React 18** + **Vite**
+- **Tailwind CSS**
+- **@dnd-kit/core** and **@dnd-kit/sortable** for drag-and-drop
+- **date-fns** for date logic
+- **uuid** for task IDs
+- **localStorage** (no backend)
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Project structure
+
+```
+src/
+  components/
+    Calendar.jsx
+    DayCell.jsx
+    DayDetailPanel.jsx
+    TaskCard.jsx
+    AddEditModal.jsx
+    SubjectSidebar.jsx
+    CountdownChips.jsx
+  hooks/
+    useTasks.js
+    useCalendar.js
+  data/
+    initialTasks.js
+    subjects.js
+  App.jsx
+  main.jsx
+  index.css
+```
+
+## Run locally
+
+```bash
+npm install
+npm run dev
+```
+
+## Build
+
+```bash
+npm run build
+npm run preview
+```
