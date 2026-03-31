@@ -98,11 +98,14 @@ export default function ExamSummaryModal({ open, onClose }) {
                       <div className="flex items-center gap-2">
                         <span className={`h-2.5 w-2.5 rounded-full ${cls.border.replace('border-', 'bg-')}`} />
                         <div className="truncate text-sm font-semibold text-slate-900">
-                          {r.subject.chip}
+                          {r.subject.short ?? r.subject.chip}
                         </div>
                       </div>
                       <div className="mt-1 text-xs text-slate-500">
                         Exam {format(parseISO(r.subject.examDate), 'MMM d, yyyy')}
+                      </div>
+                      <div className="mt-1 text-xs font-semibold text-slate-700">
+                        {r.subject.full ?? r.subject.name}
                       </div>
                     </div>
                     <div className="text-right text-xs text-slate-600">

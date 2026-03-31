@@ -17,6 +17,8 @@ const typeOptions = [
   'Review',
   'Rest',
   'Personal',
+  'Holiday',
+  'CompSoc',
 ]
 
 export default function AddEditModal({ mode, task, onClose, onSave }) {

@@ -86,7 +86,7 @@ export default function App() {
 
   return (
     <div className="min-h-dvh">
-      <header className="sticky top-0 z-20 border-b border-slate-200/70 bg-white/70 backdrop-blur">
+      <header className="sticky top-0 z-20 border-b border-slate-200 border-t border-slate-200 bg-white/70 backdrop-blur">
         <div className="mx-auto flex max-w-[1280px] items-center gap-4 px-4 py-3">
           <div className="min-w-0">
             <div className="font-display text-xl leading-none tracking-tight text-slate-900 sm:text-2xl">
@@ -95,7 +95,7 @@ export default function App() {
             <div className="mt-1 text-xs text-slate-500">Today: {headerTodayLabel}</div>
           </div>
 
-          <div className="ml-2 hidden min-w-0 flex-1 items-center gap-2 overflow-x-auto md:flex">
+          <div className="ml-2 hidden min-w-0 flex-1 items-center gap-2 overflow-x-auto overflow-y-visible pb-1 md:flex">
             <CountdownChips />
           </div>
 
@@ -118,7 +118,7 @@ export default function App() {
         </div>
       </header>
 
-      <main className="mx-auto grid max-w-[1280px] grid-cols-1 gap-4 px-4 py-4 lg:grid-cols-[360px_1fr]">
+      <main className="mx-auto grid max-w-[1280px] grid-cols-1 gap-4 px-4 py-4 lg:grid-cols-[440px_1fr]">
         <aside className="order-2 lg:order-1">
           <SubjectSidebar tasksApi={tasksApi} onSelectDate={openDay} />
         </aside>

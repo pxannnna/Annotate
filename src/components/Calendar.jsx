@@ -6,6 +6,13 @@ import DayCell from './DayCell'
 const weekdayLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
 export default function Calendar({ calendar, tasksApi, onOpenDay, onAddTask }) {
+  const filterStyles = {
+    algorithms: { bg: '#EDE9FE', text: '#7C3AED' },
+    physics: { bg: '#FEF3C7', text: '#D97706' },
+    fds: { bg: '#D1FAE5', text: '#059669' },
+    maths: { bg: '#DBEAFE', text: '#2563EB' },
+  }
+
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 6 } }))
 
   const onDragEnd = (event) => {
@@ -72,20 +79,25 @@ export default function Calendar({ calendar, tasksApi, onOpenDay, onAddTask }) {
         <div className="flex flex-wrap items-center gap-2">
           <div className="mr-1 text-xs font-semibold text-slate-500">Filter</div>
           {subjects.map((s) => {
-            const cls = classesForSubject(s.id)
             const active = tasksApi.filters[s.id] !== false
+            const st = filterStyles[s.id]
+            const activeStyle = active && st ? { backgroundColor: st.bg, color: st.text, borderColor: st.bg } : undefined
             return (
               <button
                 key={s.id}
                 type="button"
                 onClick={() => tasksApi.toggleFilter(s.id)}
-                className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold ring-1 transition hover:ring-slate-300 ${
-                  active ? `${cls.chip} ring-slate-200` : 'bg-slate-100 text-slate-600 ring-slate-200'
+                style={activeStyle}
+                className={`inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-semibold transition hover:bg-slate-50 ${
+                  active ? 'border-transparent' : 'border-slate-200 bg-slate-100 text-slate-600'
                 }`}
                 title={active ? 'Hide' : 'Show'}
               >
-                <span className={`h-2 w-2 rounded-full ${active ? 'bg-slate-700/60' : 'bg-slate-400'}`} />
-                {s.chip}
+                <span
+                  className="h-2 w-2 rounded-full"
+                  style={{ backgroundColor: active && st ? st.text : '#94a3b8' }}
+                />
+                {s.short}
               </button>
             )
           })}
@@ -101,7 +113,7 @@ export default function Calendar({ calendar, tasksApi, onOpenDay, onAddTask }) {
       </div>
 
       <DndContext sensors={sensors} onDragEnd={onDragEnd}>
-        <div className="grid grid-cols-7">
+        <div className="grid grid-cols-7 auto-rows-fr">
           {calendar.gridDays.map((d) => {
             const dateStr = format(d, 'yyyy-MM-dd')
             const allTasks = tasksApi.tasksByDate.get(dateStr) ?? []

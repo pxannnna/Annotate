@@ -21,7 +21,7 @@ function t(subject, date, name, hours, type, extra = {}) {
 }
 
 export const initialTasks = [
-  // Algorithms & Data Structures (exam Apr 30)
+  // Algorithms & Data Structures (AIDS) (exam May 1)
   t(alg, '2026-04-01', 'Watch lectures 1–5', 5, 'Lecture'),
   t(alg, '2026-04-02', 'Watch lectures 6–10', 5, 'Lecture'),
   t(alg, '2026-04-03', 'Watch lectures 11–15 + Quiz 1', 6, 'Lecture'),
@@ -40,9 +40,9 @@ export const initialTasks = [
   t(alg, '2026-04-20', 'Final past paper + revision', 8, 'Past Paper'),
   t(alg, '2026-04-21', 'Last review', 6, 'Review'),
   t(alg, '2026-04-22', 'Light review only', 3, 'Review'),
-  t(alg, '2026-04-30', 'EXAM — Algorithms', 0, 'Exam', { isExam: true }),
+  t(alg, '2026-05-01', 'EXAM — AIDS', 0, 'Exam', { isExam: true }),
 
-  // Physics — Fields & Matter (exam May 1)
+  // Physics — Fields & Matter (exam Apr 30)
   t(phys, '2026-04-04', 'Fields lectures 1–3', 3, 'Lecture'),
   t(phys, '2026-04-07', 'Fields lectures 4–8', 5, 'Lecture'),
   t(phys, '2026-04-08', 'Fields lectures 9–12', 4, 'Lecture'),
@@ -60,8 +60,8 @@ export const initialTasks = [
   t(phys, '2026-04-27', 'Full subject review', 7, 'Review'),
   t(phys, '2026-04-28', 'Final review', 6, 'Review'),
   t(phys, '2026-04-29', 'Rest + light notes', 3, 'Rest'),
-  t(phys, '2026-04-30', 'Light Physics review', 4, 'Review', { isPostExam: true }),
-  t(phys, '2026-05-01', 'EXAM — Physics', 0, 'Exam', { isExam: true }),
+  t(phys, '2026-04-30', 'EXAM — Physics', 0, 'Exam', { isExam: true }),
+  t(phys, '2026-05-01', 'Light Physics review', 4, 'Review', { isPostExam: true }),
 
   // Foundation to Data Science (exam May 6)
   t(fds, '2026-04-21', 'FDS lectures 1–6', 4, 'Lecture'),

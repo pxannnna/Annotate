@@ -37,8 +37,8 @@ export default function SubjectSidebar({ tasksApi, onSelectDate }) {
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
                       <span className={`h-2.5 w-2.5 rounded-full ${cls.chip}`} />
-                      <div className="truncate text-sm font-semibold text-slate-900">
-                        {s.chip}
+                      <div className="text-sm font-semibold leading-snug text-slate-900">
+                        {s.full}
                       </div>
                     </div>
                     <div className="mt-1 text-xs text-slate-500">

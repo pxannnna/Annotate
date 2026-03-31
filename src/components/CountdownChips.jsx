@@ -11,11 +11,11 @@ export default function CountdownChips() {
         return (
           <div
             key={s.id}
-            className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold shadow-sm ring-1 ring-slate-200 ${cls.chip}`}
+            className={`inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold shadow-[0_1px_3px_rgba(0,0,0,0.06)] transition hover:bg-slate-50 ${cls.chip}`}
             title={s.name}
           >
             <span className={`h-2 w-2 rounded-full ${cls.border.replace('border-', 'bg-')}`} />
-            <span className="opacity-95">{s.chip}</span>
+            <span className="opacity-95">{s.short}</span>
             <span className="rounded-full bg-black/6 px-2 py-0.5 text-[11px] font-bold text-slate-700">
               {days} days
             </span>
